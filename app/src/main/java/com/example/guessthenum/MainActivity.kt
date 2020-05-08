@@ -1,10 +1,12 @@
 package com.example.guessthenum
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import kotlin.random.Random
 import kotlinx.android.synthetic.main. activity_main.*
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private var toGuess = -1
@@ -15,8 +17,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        SeeRankingBtn.setOnClickListener{goToRanking()}
         newGameBtn.setOnClickListener{newGame()}
-        guessBtn.setOnClickListener({checkAnswer()})
+        guessBtn.setOnClickListener {
+            try {
+                checkAnswer()
+            } catch (e : Exception) {
+                // no input value
+            }}
         newGame()
     }
 
@@ -59,5 +67,10 @@ class MainActivity : AppCompatActivity() {
                 score = 5
             }
         }
+    }
+
+    private fun goToRanking() {
+        val intent = Intent(this, RankingActivity::class.java).apply {}
+        startActivity(intent)
     }
 }
