@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main. activity_main.*
 class MainActivity : AppCompatActivity() {
     private var toGuess = -1
     private var tries = 0
-
+    private var score = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Number must be between 0 and 20", Toast.LENGTH_SHORT).show()
         } else if (guessed == toGuess) {
             tries++
+            calculateScore()
             Toast.makeText(applicationContext, "Good job! You got it after $tries tries.", Toast.LENGTH_SHORT).show()
             newGame()
         } else {
@@ -43,4 +44,20 @@ class MainActivity : AppCompatActivity() {
         triesText.text = tries.toString()
     }
 
+    private fun calculateScore() {
+        when {
+            tries >= 7 -> {
+                score = 1
+            }
+            tries >= 5 -> {
+                score = 2
+            }
+            tries >= 2 -> {
+                score = 3
+            }
+            tries == 1 -> {
+                score = 5
+            }
+        }
+    }
 }
