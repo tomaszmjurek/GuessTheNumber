@@ -21,5 +21,24 @@
             android:layout_below="@id/imageView"
             android:padding="30dp"/>
 
+    <LinearLayout
+            android:id="@+id/ranking_list_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
+    <Button
+            android:id="@+id/returnBtn"
+            android:layout_width="50pt"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:text="Return">
+
+    </Button>
+
+
 
 </LinearLayout>

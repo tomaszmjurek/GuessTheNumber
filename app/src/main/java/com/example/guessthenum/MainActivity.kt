@@ -50,6 +50,11 @@ class MainActivity : AppCompatActivity() {
             tries++
         }
         triesText.text = tries.toString()
+
+        if(tries > 20) {
+            Toast.makeText(applicationContext, "You have lost! Try again.", Toast.LENGTH_SHORT).show()
+            newGame()
+        }
     }
 
     private fun calculateScore() {
