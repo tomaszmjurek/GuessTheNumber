@@ -5,7 +5,7 @@ import android.content.Context
 //TODO convert to newest methods
 
 class InputValidation (private val context: Context) {
-
+//
 //    /**
 //     * method to check InputEditText filled .
 //     *
