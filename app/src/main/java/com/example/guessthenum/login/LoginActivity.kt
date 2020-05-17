@@ -21,7 +21,7 @@ class LoginActivity : AppCompatActivity()
         userDatabaseHelper = UserDatabaseHelper(this@LoginActivity)
 
         loginBtn.setOnClickListener(){ checkLogin() }
-        registerLink.setOnClickListener(){ registerUser() }
+        registerLink.setOnClickListener(){ startActivity(Intent(this,RegisterActivity::class.java)) }
     }
 
     private fun checkLogin() {
@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity()
 
         if (name != "" && password != "") {
             if (userDatabaseHelper.userExists(name)) {
-                if (userDatabaseHelper.userExists(password))
+                if (userDatabaseHelper.userExists(name, password))
                     startActivity(Intent(this,MainActivity::class.java))
                 else
                     makeToast("Wrong password!")
@@ -46,7 +46,5 @@ class LoginActivity : AppCompatActivity()
         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 
-    private fun registerUser() {
-        //registration view albo tutaj w popupie
-    }
+
 }

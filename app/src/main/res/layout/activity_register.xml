@@ -46,7 +46,7 @@
     </EditText>
 
     <Button
-            android:id="@+id/loginBtn"
+            android:id="@+id/registerBtn"
             android:layout_width="50pt"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -55,7 +55,7 @@
     </Button>
 
     <TextView
-            android:id="@+id/registerLink"
+            android:id="@+id/loginLink"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
