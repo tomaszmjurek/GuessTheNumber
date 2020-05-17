@@ -38,11 +38,11 @@ class MainActivity : AppCompatActivity() {
     private fun checkAnswer() {
         var guessed = numberText.text.toString().toInt()
         if (guessed < 0 || guessed > 20) {
-            Toast.makeText(applicationContext, "Number must be between 0 and 20", Toast.LENGTH_SHORT).show()
+            makeToast("Number must be between 0 and 20")
         } else if (guessed == toGuess) {
             tries++
             calculateScore()
-            Toast.makeText(applicationContext, "Good job! You got it after $tries tries.", Toast.LENGTH_SHORT).show()
+            makeToast("Good job! You got it after $tries tries.")
             newGame()
         } else {
             if (guessed < toGuess) infoText.text = "Wrong. Try something greater..."
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         triesText.text = tries.toString()
 
         if(tries > 20) {
-            Toast.makeText(applicationContext, "You have lost! Try again.", Toast.LENGTH_SHORT).show()
+            makeToast("You have lost! Try again.")
             newGame()
         }
     }
@@ -75,7 +75,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToRanking() {
-        val intent = Intent(this, RankingActivity::class.java).apply {}
-        startActivity(intent)
+//        val intent = Intent(this, RankingActivity::class.java).apply {}
+//        startActivity(intent)
+        startActivity(Intent(this,RankingActivity::class.java))
+    }
+
+    private fun makeToast(text : String) {
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 }

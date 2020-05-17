@@ -8,32 +8,34 @@
         android:orientation="vertical"
         android:background="@color/grey">
 
-    <TextView
-            android:id="@+id/textView"
+    <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="LOGO HERE"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:padding="30dp"/>
+            android:layout_marginTop="60dp"
+            android:src="@drawable/ic_launcher_background"
+            app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/nameInput"
+            android:hint="@string/hint_name"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:inputType="text"
             android:layout_marginTop="30dp">
     </EditText>
 
     <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/passwordInput"
+            android:hint="@string/hint_password"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:inputType="textPassword"
             android:layout_marginTop="30dp">
     </EditText>
     <Button
-            android:id="@+id/returnBtn"
+            android:id="@+id/loginBtn"
             android:layout_width="50pt"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -42,12 +44,12 @@
     </Button>
 
     <TextView
-            android:id="@+id/textViewLinkRegister"
+            android:id="@+id/registerLink"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:text="@string/text_not_member"
             android:textSize="16dp" />
-    
+
 </LinearLayout>
