@@ -30,8 +30,11 @@ class LoginActivity : AppCompatActivity()
 
         if (name != "" && password != "") {
             if (userDatabaseHelper.userExists(name)) {
-                if (userDatabaseHelper.userExists(name, password))
-                    startActivity(Intent(this,MainActivity::class.java))
+                if (userDatabaseHelper.userExists(name, password)) {
+                    val i = Intent(this@LoginActivity, MainActivity::class.java);
+                    i.putExtra("nickName", name);
+                    startActivity(i);
+                }
                 else
                     makeToast("Wrong password!")
             } else {

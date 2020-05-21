@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.guessthenum.login.LoginActivity
 import kotlin.random.Random
 import kotlinx.android.synthetic.main. activity_main.*
 import java.lang.Exception
@@ -17,7 +18,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val nickName = intent.getStringExtra("nickName")
+        nickNameText.text = "Playing as: $nickName"
+
         SeeRankingBtn.setOnClickListener{goToRanking()}
+        logoutBtn.setOnClickListener{startActivity(Intent(this, LoginActivity()::class.java))}
         newGameBtn.setOnClickListener{newGame()}
         guessBtn.setOnClickListener {
             try {
@@ -75,8 +80,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToRanking() {
-//        val intent = Intent(this, RankingActivity::class.java).apply {}
-//        startActivity(intent)
         startActivity(Intent(this,RankingActivity::class.java))
     }
 

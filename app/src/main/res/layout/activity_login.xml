@@ -9,11 +9,12 @@
         android:background="@color/grey">
 
     <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginTop="60dp"
-            android:src="@drawable/ic_launcher_background"
-            app:srcCompat="@android:drawable/sym_def_app_icon" />
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/ic_launcher_foreground"/>
 
     <EditText
             android:id="@+id/nameInput"
