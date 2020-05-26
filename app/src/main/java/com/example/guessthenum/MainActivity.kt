@@ -108,4 +108,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         val log: Logger = Logger.getLogger(RankingActivity::class.java.simpleName)
     }
+
 }
