@@ -5,21 +5,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.guessthenum.login.LoginActivity
+import com.example.guessthenum.sql.UserDatabaseHelper
 import kotlin.random.Random
 import kotlinx.android.synthetic.main. activity_main.*
 import java.lang.Exception
+import java.util.logging.Logger
 
 class MainActivity : AppCompatActivity() {
     private var toGuess = -1
     private var tries = 0
     private var score = 0
+    private lateinit var nickName : String
+    private var globalScore = 0
+
+    private lateinit var userDataBaseHelper : UserDatabaseHelper // = UserDatabaseHelper(this@MainActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val nickName = intent.getStringExtra("nickName")
+        nickName = intent.getStringExtra("nickName")
         nickNameText.text = "Playing as: $nickName"
+
+        userDataBaseHelper = UserDatabaseHelper(this@MainActivity)
+        globalScore = userDataBaseHelper.getUserScore(nickName)
+        updateGlobalScore()
 
         SeeRankingBtn.setOnClickListener{goToRanking()}
         logoutBtn.setOnClickListener{startActivity(Intent(this, LoginActivity()::class.java))}
@@ -28,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 checkAnswer()
             } catch (e : Exception) {
-                // no input value
+                log.info("Input value missing - $e")
             }}
         newGame()
     }
@@ -36,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private fun newGame() {
         toGuess = Random.nextInt(0, 20)
         tries = 0
+        score = 0
         infoText.text = ""
         triesText.text = ""
     }
@@ -47,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         } else if (guessed == toGuess) {
             tries++
             calculateScore()
-            makeToast("Good job! You got it after $tries tries.")
+            makeToast("Good job! You gained $score points after $tries tries.")
+            updateGlobalScore()
             newGame()
         } else {
             if (guessed < toGuess) infoText.text = "Wrong. Try something greater..."
@@ -79,11 +91,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateGlobalScore() {
+        globalScore += score
+        globalScoreText.text = "Your score: $globalScore"
+        userDataBaseHelper.updateUserScore(nickName, globalScore)
+    }
+
     private fun goToRanking() {
         startActivity(Intent(this,RankingActivity::class.java))
     }
 
     private fun makeToast(text : String) {
         Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        val log: Logger = Logger.getLogger(RankingActivity::class.java.simpleName)
     }
 }

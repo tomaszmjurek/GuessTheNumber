@@ -1,23 +1,18 @@
 package com.example.guessthenum
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.marginTop
-import com.example.guessthenum.login.User
+import androidx.appcompat.app.AppCompatActivity
 import com.example.guessthenum.sql.UserDatabaseHelper
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_ranking.*
-import java.lang.Exception
-import java.lang.NullPointerException
-import kotlin.math.log
+import java.util.logging.Logger
 
 class RankingActivity : AppCompatActivity() {
 
     private lateinit var userDataBaseHelper : UserDatabaseHelper
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ranking)
@@ -36,7 +31,7 @@ class RankingActivity : AppCompatActivity() {
                 ranking_list_layout.addView(tvDynamic)
             }
         } catch (e : NullPointerException) {
-
+            log.info("Ranking list is null - $e")
         }
 
         returnBtn.setOnClickListener{onBackPressed()}
@@ -44,5 +39,9 @@ class RankingActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+    }
+
+    companion object {
+        val log: Logger = Logger.getLogger(RankingActivity::class.java.simpleName)
     }
 }

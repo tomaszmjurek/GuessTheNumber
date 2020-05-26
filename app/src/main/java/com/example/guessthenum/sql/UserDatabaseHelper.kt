@@ -23,67 +23,22 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-
         //Drop User Table if exist
         db.execSQL(DROP_USER_TABLE)
-
         // Create tables again
         onCreate(db)
-    }
-
-    /**
-     * This method is to fetch all user and return the list of user records
-     *
-     * @return list
-     */
-    fun getAllUser(): List<User> {
-
-        // array of columns to fetch
-        val columns = arrayOf(COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_PASSWORD, COLUMN_USER_SCORE)
-
-        // sorting orders
-        val sortOrder = "$COLUMN_USER_NAME ASC"
-        val userList = ArrayList<User>()
-
-        val db = this.readableDatabase
-
-        // query the user table
-        val cursor = db.query(TABLE_USER,
-            columns,            //columns to return
-            null,     //columns for the WHERE clause
-            null,  //The values for the WHERE clause
-            null,      //group the rows
-            null,       //filter by row groups
-            sortOrder)         //The sort order
-        if (cursor.moveToFirst()) {
-            do {
-                val user = User(
-                    id = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)).toInt(),
-                    name = cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
-                    password = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)),
-                    score = cursor.getString(cursor.getColumnIndex(COLUMN_USER_SCORE)).toInt()
-                )
-
-                userList.add(user)
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-        db.close()
-        return userList
     }
 
     /**
      * This method fetches best 10 scores to use in RankingActivity
      */
     fun getTenBestUsers() : List<User> {
-
         // array of columns to fetch
         val columns = arrayOf(COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_PASSWORD, COLUMN_USER_SCORE)
 
         // sorting orders
         val sortOrder = "$COLUMN_USER_SCORE DESC"
         val userList = ArrayList<User>()
-
         val db = this.readableDatabase
 
         // query the user table
@@ -114,7 +69,6 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
 
     /**
      * This method is to create user record
-     *
      * @param user
      */
     fun addUser(user: User) {
@@ -130,42 +84,9 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
         db.close()
     }
 
-    /**
-     * This method to update user record
-     *
-     * @param user
-     */
-    fun updateUser(user: User) {
-        val db = this.writableDatabase
-
-        val values = ContentValues()
-        values.put(COLUMN_USER_NAME, user.name)
-        values.put(COLUMN_USER_PASSWORD, user.password)
-        values.put(COLUMN_USER_SCORE, user.score)
-
-        // updating row
-        db.update(TABLE_USER, values, "$COLUMN_USER_ID = ?",
-            arrayOf(user.id.toString()))
-        db.close()
-    }
-
-    /**
-     * This method is to delete user record
-     *
-     * @param user
-     */
-    fun deleteUser(user: User) {
-
-        val db = this.writableDatabase
-        // delete user record by id
-        db.delete(TABLE_USER, "$COLUMN_USER_ID = ?",
-            arrayOf(user.id.toString()))
-        db.close()
-    }
 
     /**
      * This method to check user exist or not
-     *
      * @param name
      * @return true/false
      */
@@ -195,7 +116,6 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
             null,   //filter by row groups
             null)  //The sort order
 
-
         val cursorCount = cursor.count
         cursor.close()
         db.close()
@@ -215,10 +135,8 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
      * @return true/false
      */
     fun userExists(name: String, password: String): Boolean {
-
         // array of columns to fetch
         val columns = arrayOf(COLUMN_USER_NAME)
-
         val db = this.readableDatabase
 
         // selection criteria
@@ -249,11 +167,122 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
             return true
 
         return false
+    }
 
+    /**
+     * This method return score for given user name
+     * @param name - userName in DB
+     */
+    fun getUserScore(name: String) : Int {
+        val columns = arrayOf(COLUMN_USER_SCORE)
+        val db = this.readableDatabase
+
+        val selection = "$COLUMN_USER_NAME = ?"
+        val selectionArgs = arrayOf(name)
+
+        val cursor = db.query(TABLE_USER,
+            columns,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null)
+
+        var userScore = -1
+        if (cursor.moveToFirst()) {
+            userScore = cursor.getString(cursor.getColumnIndex(COLUMN_USER_SCORE)).toInt()
+        }
+        cursor.close()
+        db.close()
+
+        return userScore
+    }
+
+    /**
+     * This method updates user score with current global score
+     * @param name - user name in DB
+     * @param newScore - current global user score
+     */
+    fun updateUserScore(name: String, newScore: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues()
+        values.put(COLUMN_USER_SCORE, newScore)
+
+        db.update(TABLE_USER, values, "$COLUMN_USER_NAME = ?",
+            arrayOf(name))
+
+        db.close()
+    }
+
+    /**
+     * This method to update user record
+     * @param user
+     */
+    fun updateUser(user: User) {
+        val db = this.writableDatabase
+
+        val values = ContentValues()
+        values.put(COLUMN_USER_NAME, user.name)
+        values.put(COLUMN_USER_PASSWORD, user.password)
+        values.put(COLUMN_USER_SCORE, user.score)
+
+        // updating row
+        db.update(TABLE_USER, values, "$COLUMN_USER_ID = ?",
+            arrayOf(user.id.toString()))
+        db.close()
+    }
+
+    /**
+     * This method is to delete user record
+     * @param user
+     */
+    fun deleteUser(user: User) {
+        val db = this.writableDatabase
+        // delete user record by id
+        db.delete(TABLE_USER, "$COLUMN_USER_ID = ?",
+            arrayOf(user.id.toString()))
+        db.close()
+    }
+
+    /**
+     * This method is to fetch all user and return the list of user records
+     * @return list
+     */
+    fun getAllUser(): List<User> {
+        // array of columns to fetch
+        val columns = arrayOf(COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_PASSWORD, COLUMN_USER_SCORE)
+
+        // sorting orders
+        val sortOrder = "$COLUMN_USER_NAME ASC"
+        val userList = ArrayList<User>()
+        val db = this.readableDatabase
+
+        // query the user table
+        val cursor = db.query(TABLE_USER,
+            columns,            //columns to return
+            null,     //columns for the WHERE clause
+            null,  //The values for the WHERE clause
+            null,      //group the rows
+            null,       //filter by row groups
+            sortOrder)         //The sort order
+        if (cursor.moveToFirst()) {
+            do {
+                val user = User(
+                    id = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)).toInt(),
+                    name = cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
+                    password = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)),
+                    score = cursor.getString(cursor.getColumnIndex(COLUMN_USER_SCORE)).toInt()
+                )
+                userList.add(user)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return userList
     }
 
     companion object {
-
         // Database Version
         private val DATABASE_VERSION = 3
 
