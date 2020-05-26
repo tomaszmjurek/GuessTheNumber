@@ -10,8 +10,10 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
 
     // create table sql query
     private val CREATE_USER_TABLE = ("CREATE TABLE " + TABLE_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT, "
-            + COLUMN_USER_PASSWORD + " TEXT" + ")")
+            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_USER_NAME + " TEXT, "
+            + COLUMN_USER_PASSWORD + " TEXT, "
+            + COLUMN_USER_SCORE + " INTEGER)")
 
     // drop table sql query
     private val DROP_USER_TABLE = "DROP TABLE IF EXISTS $TABLE_USER"
@@ -37,7 +39,7 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
     fun getAllUser(): List<User> {
 
         // array of columns to fetch
-        val columns = arrayOf(COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_PASSWORD)
+        val columns = arrayOf(COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_PASSWORD, COLUMN_USER_SCORE)
 
         // sorting orders
         val sortOrder = "$COLUMN_USER_NAME ASC"
@@ -58,11 +60,52 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
                 val user = User(
                     id = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)).toInt(),
                     name = cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
-                    password = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD))
+                    password = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)),
+                    score = cursor.getString(cursor.getColumnIndex(COLUMN_USER_SCORE)).toInt()
                 )
 
                 userList.add(user)
             } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return userList
+    }
+
+    /**
+     * This method fetches best 10 scores to use in RankingActivity
+     */
+    fun getTenBestUsers() : List<User> {
+
+        // array of columns to fetch
+        val columns = arrayOf(COLUMN_USER_ID, COLUMN_USER_NAME, COLUMN_USER_PASSWORD, COLUMN_USER_SCORE)
+
+        // sorting orders
+        val sortOrder = "$COLUMN_USER_SCORE DESC"
+        val userList = ArrayList<User>()
+
+        val db = this.readableDatabase
+
+        // query the user table
+        val cursor = db.query(TABLE_USER,
+            columns,            //columns to return
+            null,     //columns for the WHERE clause
+            null,  //The values for the WHERE clause
+            null,      //group the rows
+            null,       //filter by row groups
+            sortOrder)         //The sort order
+        if (cursor.moveToFirst()) {
+            var i = 0
+            do {
+                val user = User(
+                    id = cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)).toInt(),
+                    name = cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
+                    password = cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)),
+                    score = cursor.getString(cursor.getColumnIndex(COLUMN_USER_SCORE)).toInt()
+                )
+                userList.add(user)
+                i++
+            } while (cursor.moveToNext() && i < 10)
         }
         cursor.close()
         db.close()
@@ -80,6 +123,7 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
         val values = ContentValues()
         values.put(COLUMN_USER_NAME, user.name)
         values.put(COLUMN_USER_PASSWORD, user.password)
+        values.put(COLUMN_USER_SCORE, user.score)
 
         // Inserting Row
         db.insert(TABLE_USER, null, values)
@@ -97,6 +141,7 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
         val values = ContentValues()
         values.put(COLUMN_USER_NAME, user.name)
         values.put(COLUMN_USER_PASSWORD, user.password)
+        values.put(COLUMN_USER_SCORE, user.score)
 
         // updating row
         db.update(TABLE_USER, values, "$COLUMN_USER_ID = ?",
@@ -210,7 +255,7 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
     companion object {
 
         // Database Version
-        private val DATABASE_VERSION = 1
+        private val DATABASE_VERSION = 3
 
         // Database Name
         private val DATABASE_NAME = "UserManager.db"
@@ -222,6 +267,7 @@ class UserDatabaseHelper (context: Context) : SQLiteOpenHelper(context, DATABASE
         private val COLUMN_USER_ID = "user_id"
         private val COLUMN_USER_NAME = "user_name"
         private val COLUMN_USER_PASSWORD = "user_password"
+        private val COLUMN_USER_SCORE = "user_score"
     }
 
 }

@@ -36,7 +36,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (password != confirmPassword)
                     makeToast("Passwords must match each other!")
                 else {
-                    userDatabaseHelper.addUser(User(-1, name, password))
+                    userDatabaseHelper.addUser(User(-1, name, password, 0))
                     makeToast("New user registered")
                     startActivity(Intent(this,LoginActivity::class.java))
                 }
