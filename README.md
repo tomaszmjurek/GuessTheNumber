@@ -1,5 +1,5 @@
 <h1 align="center" style="display: block; font-size: 2.5em; font-weight: bold; margin-block-start: 1em; margin-block-end: 1em;">
-<a name="logo" href="https://www.aregtech.com"><img align="center" src="https://raw.githubusercontent.com/tomaszmjurek/GuessTheNumber/master/app/src/main/ic_launcher-playstore.png" alt="AREG SDK Home" style="width:20%;height:20%"/></a>
+<img align="center" src="https://raw.githubusercontent.com/tomaszmjurek/GuessTheNumber/master/app/src/main/ic_launcher-playstore.png" alt="Guess The Number" style="width:20%;height:20%"/></a>
   <br /><br /><strong>Guess The Number</strong>
 </h1>
 
